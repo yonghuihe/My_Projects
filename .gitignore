@@ -25,9 +25,15 @@ hs_err_pid*
 # my ignore
 .settings/
 .svn/
+<<<<<<< HEAD
 .idea/
+=======
+>>>>>>> 21dd3733c32e442a12274b429f84c59b3a78c9d8
 target/
 
 .project
 .classpath
+<<<<<<< HEAD
 *.iml
+=======
+>>>>>>> 21dd3733c32e442a12274b429f84c59b3a78c9d8
