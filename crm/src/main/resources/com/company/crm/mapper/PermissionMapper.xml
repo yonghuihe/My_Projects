@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.PermissionMapper">
+	<resultMap id="BaseResultMap" type="Permission">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="resource" property="resource" />
+	</resultMap>
+	
+	<sql id="where_sql">
+		<where>
+			<if test="keyword != null and keyword != ''">
+				and (name like CONCAT("%",#{keyword},"%")
+					or resource like CONCAT("%",#{keyword},"%")
+				)
+			</if>
+		</where>
+	</sql>
+	
+	<delete id="deleteByPrimaryKey" parameterType="Long">
+		delete from permission
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="Permission" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into permission (name, resource)
+		values (#{name}, #{resource})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Permission">
+		update permission
+		set name = #{name},
+		resource = #{resource}
+		where id = #{id}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="Long">
+		select id, name, resource
+		from permission
+		where id = #{id}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select id, name, resource
+		from permission
+	</select>
+
+	<select id="getPermissionsByRId" parameterType="Long" resultMap="BaseResultMap">
+		select * from permission where id in(
+			select rp.p_id  from role r LEFT JOIN role_permission rp on r.id = rp.r_id where r.id = #{rId}
+		)
+	</select>
+	
+	<select id="selectAllResource" resultType="String">
+		select resource from permission
+	</select>
+	
+	<select id="queryPageResultCount" parameterType="PermissionQueryObject" resultType="Long">
+		select count(id)
+		from permission
+		<include refid="where_sql"/>
+	</select>
+	
+	<select id="queryPageResult" parameterType="PermissionQueryObject" resultMap="BaseResultMap">
+		select id, name, resource
+		from permission
+		<include refid="where_sql"/>
+		limit #{start},#{rows}
+	</select>
+	
+</mapper>

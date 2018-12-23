@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="Menu" >
+    <id column="id" property="id"  />
+	<result column="text" property="text"  />
+	<result column="url" property="url"  />
+	<association property="parent" javaType="Menu" columnPrefix="p_">
+		<id property="id" column="id" />
+		<result property="text" column="text" />
+		<result property="url" column="url" />
+	</association>
+	<association property="permission" javaType="Permission" columnPrefix="mp_">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="resource" column="resource" />
+	</association>
+	<collection property="children" ofType="Menu" select="selectChildren" column="id">
+	</collection>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from menu where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="Menu" useGeneratedKeys="true" keyProperty="id" >
+    insert into menu 
+    (parent_id,text,url)
+    values 
+    (#{parent.id},#{text},#{url})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Menu" >
+    update menu
+    set
+	    parent_id=#{parent.id},
+	    text=#{text},
+	    url=#{url}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from menu where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from menu
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from menu m
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	SELECT
+		m.id,
+		m.text,
+		m.url,
+		m2.id as p_id,
+		m2.text as p_text,
+		m2.url as p_url,
+		mp.id AS mp_id,
+		mp.`name` as mp_name,
+		mp.resource as mp_resource
+	FROM
+		menu m
+	LEFT JOIN menu m2 ON m.parent_id = m2.id
+	LEFT JOIN permission mp ON m.permission_id = mp.id
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+  <select id="selectRoot" resultMap="BaseResultMap">
+  	SELECT
+		m.id,
+		m.text,
+		m.url,
+		mp.id AS mp_id,
+		mp.`name` as mp_name,
+		mp.resource as mp_resource
+	FROM
+		menu m LEFT JOIN permission mp
+	ON m.permission_id = mp.id
+	WHERE
+		parent_id IS NULL
+  </select>
+  <select id="selectChildren" resultMap="BaseResultMap">
+	  	SELECT
+			m.id,
+			m.text,
+			m.url,
+			mp.id AS mp_id,
+			mp.`name` as mp_name,
+			mp.resource as mp_resource
+		FROM menu m LEFT JOIN permission mp 
+			ON m.permission_id = mp.id
+		where 
+			parent_id = #{id}
+  </select>
+</mapper>

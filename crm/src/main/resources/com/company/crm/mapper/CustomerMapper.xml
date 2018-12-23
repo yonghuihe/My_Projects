@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="Customer" >
+    <id column="id" property="id"  />
+	<result column="salaryLevel" property="salaryLevel"  />
+	<result column="status" property="status"  />
+	<result column="inputTime" property="inputTime"  />
+	<result column="tel" property="tel"  />
+	<result column="job" property="job"  />
+	<result column="customerSource" property="customerSource"  />
+	<result column="email" property="email"  />
+	<result column="name" property="name"  />
+	<result column="age" property="age"  />
+	<result column="gender" property="gender"  />
+	<result column="wechat" property="wechat"  />
+	<result column="qq" property="qq"  />
+	<result column="becomeTime" property="becomeTime"  />
+	
+	<association property="inChargeUser" javaType="Employee">
+		
+	</association>
+	<association property="inputUser" javaType="Employee">
+	
+	</association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from customer where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="Customer" useGeneratedKeys="true" keyProperty="id" >
+    insert into customer 
+    (salaryLevel,status,inputTime,tel,job,inChargeUser_id,inputUser_id,customerSource,email,name,age,gender,wechat,qq,becomeTime)
+    values 
+    (#{salaryLevel},#{status},#{inputTime},#{tel},#{job},#{inChargeUser.id},#{inputUser.id},#{customerSource},#{email},#{name},#{age},#{gender},#{wechat},#{qq},#{becomeTime})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Customer" >
+    update customer
+    set
+	    salaryLevel=#{salaryLevel},
+	    status=#{status},
+	    inputTime=#{inputTime},
+	    tel=#{tel},
+	    job=#{job},
+	    inChargeUser_id=#{inChargeUser.id},
+	    inputUser_id=#{inputUser.id},
+	    customerSource=#{customerSource},
+	    email=#{email},
+	    name=#{name},
+	    age=#{age},
+	    gender=#{gender},
+	    wechat=#{wechat},
+	    qq=#{qq},
+	    becomeTime=#{becomeTime}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from customer where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from customer
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from customer
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from customer
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+</mapper>

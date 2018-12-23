@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- beans:javabean spring是一个放java对象的容器，把放在spring中的对象称之为javabean -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<!-- 设置为true，表示使用CGLIB继承的方式，默认是false -->
+	<aop:config proxy-target-class="true"/>
+
+	<!-- 使用第三方注解去扫描shiro的注解 -->
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+	
+	<!-- 配置凭证匹配器 -->
+	<bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+		<!-- 散列算法 -->
+		<property name="hashAlgorithmName" value="md5"/>
+		<!-- 散列次数 -->
+		<property name="hashIterations" value="2"/>
+	</bean>
+
+	<bean id="employeeRealm" class="com.company.crm.realm.EmployeeRealm">
+		<property name="credentialsMatcher" ref="credentialsMatcher"/>
+	</bean>
+
+	<bean id="myFormFilter" class="com.company.crm.web.filter.MyFormFilter"/>
+	
+	<bean id="ehcache" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml"/>
+	</bean>
+	
+	<!-- 配置shiro安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 配置realm数据源 -->
+		<property name="realm" ref="employeeRealm" />
+		<!-- 配置缓存管理器 -->
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+
+
+	<!-- 1、配置shiro过滤器 -->
+	<bean id="ShrioFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 配置登录认证的路径 -->
+		<property name="loginUrl" value="/login" />
+		<!-- 配置表单过滤器 -->
+		<property name="filters">
+			<map>
+				<entry key="authc" value-ref="myFormFilter" />
+			</map>
+		</property>
+		<!-- 配置安全管理器 -->
+		<property name="securityManager" ref="securityManager"/>
+		<!-- 配置过滤器 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/static/**=anon
+				/login.jsp=anon
+				/ws/**=anon
+				/logout=logout
+				/**=authc
+			</value>
+		</property>
+	</bean>
+</beans>

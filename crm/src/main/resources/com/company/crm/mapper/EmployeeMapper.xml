@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.EmployeeMapper">
+	<resultMap id="BaseResultMap" type="Employee">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="realName" property="realName" />
+		<result column="password" property="password" />
+		<result column="tel" property="tel" />
+		<result column="email" property="email" />
+		<result column="inputTime" property="inputTime" />
+		<result column="state" property="state" />
+		<result column="admin" property="admin" />
+		<association property="dept" javaType="Department" columnPrefix="d_">
+			<id column="id" property="id"/>
+			<result column="name" property="name"/>
+		</association>
+	</resultMap>
+	
+	<sql id="where_sql">
+		<where>
+			<if test="keyword != null">
+				and (e.username like CONCAT("%",#{keyword},"%")
+					or e.realName like CONCAT("%",#{keyword},"%")
+					or e.tel like CONCAT("%",#{keyword},"%")
+				)
+			</if>
+			<if test="id != null">
+				and e.id = #{id}
+			</if>
+		</where>
+	</sql>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from employee where id = #{id}
+	</delete>
+	
+	<insert id="insert" parameterType="Employee" useGeneratedKeys="true" keyProperty="id">
+		insert into employee (username, realName, password,tel, email, inputTime, state,admin,dept_id)
+		values 
+		(#{username}, #{realName}, #{password}, #{tel}, #{email}, #{inputTime}, #{state}, #{admin}, #{dept.id})
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="Employee">
+		update employee set 
+		username = #{username},realName = #{realName},
+		<if test="password != null and password != ''">
+			password = #{password},
+		</if>
+		tel = #{tel}, email = #{email},
+		inputTime = #{inputTime},
+		<if test="state != null">
+			state = #{state},
+		</if>
+		admin = #{admin},dept_id = #{dept.id}
+		where id = #{id}
+	</update>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select e.id, e.username, e.realName, e.password, e.tel, e.email, e.inputTime, e.state, e.admin, d.id as d_id, d.name as d_name
+		from employee e left join department d on e.dept_id = d.id
+		where e.id = #{id}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select e.id, e.username, e.realName, e.password, e.tel, e.email, e.inputTime, e.state, e.admin, d.id as d_id, d.name as d_name
+		from employee e left join department d on e.dept_id = d.id
+	</select>
+	
+	<select id="queryPageResultCount" parameterType="EmployeeQueryObject" resultType="Long">
+		select count(e.id)
+		from employee e
+		<include refid="where_sql"/>
+	</select>
+	
+	<select id="queryPageResult" parameterType="EmployeeQueryObject" resultMap="BaseResultMap">
+		select e.id, e.username, e.realName, e.password, e.tel, e.email, e.inputTime, e.state, e.admin, d.id as d_id, d.name as d_name
+		from employee e left join department d on e.dept_id = d.id
+		<include refid="where_sql"/>
+		limit #{start},#{rows}
+	</select>
+	
+	<update id="updateState" parameterType="Employee">
+		update employee set state = #{state} where id = #{id}
+	</update>
+	
+	<insert id="batchInsertRelation" parameterType="BatchInsertIds">
+		insert into employee_role (e_id,r_id) values 
+		 <!-- 这里的list传入的List<BatchInsertIds> -->
+		 <foreach collection="list" item="item" separator=",">
+		 	(#{item.id_1},#{item.id_2})
+		 </foreach>
+	</insert>
+	
+	<delete id="deleteRelation" parameterType="Long">
+		delete from employee_role 
+		where e_id = #{id}
+	</delete>
+	
+	<select id="getRoleIdsByEId" parameterType="Long" resultType="Long">
+		select r_id from employee_role where e_id = #{id}
+	</select>
+	
+	<select id="getEmployeeByUsername" parameterType="String" resultType="Employee">
+		select * from employee where username = #{username}
+	</select>
+	
+	<select id="getRoleByEId" parameterType="Long" resultType="String">
+		SELECT
+			r.sn
+		FROM
+			role r
+		LEFT JOIN employee_role er ON r.id = er.r_id
+		WHERE
+			er.e_id = #{id}
+	</select>
+	
+	<select id="getPermissionByEId" parameterType="Long" resultType="String">
+		SELECT
+			p.resource
+		FROM
+			permission p
+		LEFT JOIN role_permission rp ON p.id = rp.p_id
+		WHERE rp.r_id in (
+			SELECT er.r_id FROM employee_role er WHERE er.e_id = #{id}
+		)
+	</select>
+	
+</mapper>

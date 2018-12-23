@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.DepartmentMapper">
+	<resultMap id="BaseResultMap" type="Department">
+		<id column="id" property="id" />
+		<result column="sn" property="sn" />
+		<result column="name" property="name" />
+		<result column="state" property="state" />
+		<association property="manager" javaType="Employee" columnPrefix="e_">
+			<id column="id" property="id"/>
+			<result column="username" property="username"/>
+		</association>
+		<association property="parent" javaType="Department" columnPrefix="p_">
+			<id column="id" property="id"/>
+			<result column="name" property="name"/>
+		</association>
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="Long">
+		delete from department
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="Department" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into department (sn, name, state, manager_id, parent_id)
+		values (#{sn}, #{name}, #{state}, #{manager.id}, #{parent.id})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Department">
+		UPDATE department
+		SET sn = #{sn},name = #{name},state = #{state},manager_id =
+		#{manager.id},parent_id = #{parent.id}
+		WHERE
+			id = #{id}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="Long">
+		select 
+			d.id, d.sn, d.name, d.state, e.id as e_id, d.id as d_id
+		from department d left join employee e on d.id = e.dept_id
+		where d.id = #{id}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT
+			d.id,
+			d.sn,
+			d. NAME,
+			d.state,
+			d.manager_id AS e_id,
+			e.username AS e_username,
+			p.id AS p_id,
+			p.name AS p_name
+		FROM
+			department d
+		LEFT JOIN employee e ON d.manager_id = e.id
+		LEFT JOIN department p ON d.parent_id = p.id
+	</select>
+	<select id="selectByName" parameterType="String" resultType="Department">
+		Select * from department where name = #{name}
+	</select>
+	<update id="updateState" parameterType="Long">
+		update department set state = 0 where id = #{id}
+	</update>
+</mapper>
