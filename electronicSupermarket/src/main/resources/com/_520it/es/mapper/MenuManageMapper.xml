@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.MenuManageMapper" >
+    <resultMap id="BaseResultMap" type="com._520it.es.domain.MenuManage">
+        <id column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="link" property="link"/>
+        <result column="name" property="name"/>
+        <association property="parent" javaType="com._520it.es.domain.MenuManage" columnPrefix="p_">
+            <result property="id" column="id"></result>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from menu where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.MenuManage" useGeneratedKeys="true" keyProperty="id" >
+    insert into menu
+    (name,type,link,p_id)
+    values 
+    (#{name},#{type},#{link},#{parent.id})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.MenuManage" >
+    update menu
+    set
+	    name=#{name},
+	    type=#{type},
+	    link=#{link},
+	    p_id=#{parent.id}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from menu where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from menu
+  </select>
+  <select id="listParent" resultMap="BaseResultMap" >
+    select * from menu where p_id  is NULL
+  </select>
+  <select id="listButton" resultMap="BaseResultMap" >
+    select DISTINCT type from menu
+  </select>
+    <select id="listByParentId" resultMap="BaseResultMap" parameterType="long" >
+    select * from menu where p_id = #{id}
+  </select>
+
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from menu
+  	<include refid="conditionSql"/>
+  </select>
+
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select m.id,m.name,m.type,m.link,n.id AS p_id,n.name AS p_name from menu m LEFT JOIN menu n ON m.p_id=n.id
+
+  </select>
+
+</mapper>

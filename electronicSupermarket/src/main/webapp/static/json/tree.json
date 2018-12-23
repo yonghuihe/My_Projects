@@ -1,0 +1,48 @@
+﻿[
+	{
+		"id": 1,
+		"text": "微信管理",
+		"children": [
+			{
+				"id": 11,
+				"text": "默认回复",
+				"url": "defaultReply.do"
+			},
+			{
+				"id": 11,
+				"text": "关键字回复",
+				"url": "keywordReply.do"
+			},
+			{
+				"id": 11,
+				"text": "自定义菜单",
+				"url": "menuManage.do"
+			},
+			{
+				"id": 11,
+				"text": "用户列表",
+				"url": "userInfo.do"
+			},
+			{
+				"id": 11,
+				"text": "消息管理",
+				"url": "messageHandling.do"
+			}
+		]
+	},
+	{
+	"id":2,
+	"text":"业务模块管理",
+	"children":[{
+		"id":11,
+		"text":"订单管理",
+		"url":"orderBill.do"
+		
+	},{
+		"id":11,
+		"text":"商品管理",
+		"url":"product.do"
+		
+	}
+	]
+}]

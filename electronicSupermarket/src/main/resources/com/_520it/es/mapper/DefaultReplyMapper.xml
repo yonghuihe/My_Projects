@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.DefaultReplyMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.es.domain.DefaultReply" >
+    <id column="id" property="id"  />
+	<result column="attentionReply" property="attentionReply"  />
+	<result column="defaultReply" property="defaultReply"  />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from defaultReply where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.DefaultReply" useGeneratedKeys="true" keyProperty="id" >
+    insert into defaultReply 
+    (attentionReply,defaultReply)
+    values 
+    (#{attentionReply},#{defaultReply})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.DefaultReply" >
+    update defaultReply
+    set
+	    attentionReply=#{attentionReply},
+	    defaultReply=#{defaultReply}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from defaultReply where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from defaultReply
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from defaultReply
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from defaultReply
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+</mapper>

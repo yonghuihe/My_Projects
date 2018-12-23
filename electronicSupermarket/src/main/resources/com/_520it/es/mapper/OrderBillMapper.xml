@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.OrderBillMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.es.domain.OrderBill" >
+    <id column="id" property="id"  />
+    <result property="price" column="price"></result>
+    <result property="sn" column="sn"></result>
+    <result property="status" column="status"></result>
+      <result property="totalNumber" column="totalNumber"></result>
+      <result property="totalAmount" column="totalAmount"></result>
+    <association property="product" javaType="com._520it.es.domain.Product" columnPrefix="p_">
+        <id column="id" property="id"></id>
+        <result column="productName" property="productName"></result>
+    </association>
+    <association property="user" javaType="com._520it.es.domain.UserInfo" columnPrefix="u_">
+        <id column="id" property="id"></id>
+        <result column="name" property="nickname"></result>
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from orderBill where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.OrderBill" useGeneratedKeys="true" keyProperty="id" >
+             insert orderbill(sn,status,price,totalNumber,totalAmount,USER_id,product_id)
+             values(#{sn},#{status},#{price},#{totalNumber},#{totalAmount},#{user.id},#{product.id})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.OrderBill" >
+    update orderBill
+    set
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from orderBill where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+       SELECT
+            o.id,
+            o.sn,
+            o. STATUS,
+            o.price,
+            o.totalNumber,
+            o.totalAmount,
+            p.id as p_id,
+            p.productName as p_productName,
+            u.id as u_id,
+            u.nickname AS u_name
+        FROM
+            orderbill o
+        LEFT JOIN product p ON o.product_id = p.id
+        LEFT JOIN userinfo u ON o.user_id = u.id
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from orderBill
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from orderBill
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+</mapper>

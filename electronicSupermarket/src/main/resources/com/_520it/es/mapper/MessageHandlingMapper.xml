@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.MessageHandlingMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.es.domain.MessageHandling" >
+    <id column="id" property="id"  />
+	<result column="infoTime" property="infoTime"  />
+	<result column="user" property="user"  />
+	<result column="infoType" property="infoType"  />
+	<result column="responseContent" property="responseContent"  />
+	<result column="requestContent" property="requestContent"  />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from messageHandling where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.MessageHandling" useGeneratedKeys="true" keyProperty="id" >
+    insert into messageHandling 
+    (infoTime,user,infoType,responseContent,requestContent)
+    values 
+    (#{infoTime},#{user},#{infoType},#{responseContent},#{requestContent})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.MessageHandling" >
+    update messageHandling
+    set
+	    infoTime=#{infoTime},
+	    user=#{user},
+	    infoType=#{infoType},
+	    responseContent=#{responseContent},
+	    requestContent=#{requestContent}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from messageHandling where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from messageHandling
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from messageHandling
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from messageHandling
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+</mapper>

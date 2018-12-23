@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.OrderBillItemMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.es.domain.OrderBillItem" >
+    <id column="id" property="id"  />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from orderBillItem where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.OrderBillItem" useGeneratedKeys="true" keyProperty="id" >
+    insert into orderBillItem 
+    ()
+    values 
+    ()
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.OrderBillItem" >
+    update orderBillItem
+    set
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from orderBillItem where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from orderBillItem
+  </select>
+  <sql id="conditionSql">
+  	<where>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from orderBillItem
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from orderBillItem
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+</mapper>

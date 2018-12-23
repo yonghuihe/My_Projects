@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.es.mapper.KeywordReplyMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.es.domain.KeywordReply" >
+    <id column="id" property="id"  />
+	<result column="type" property="type"  />
+	<result column="responseContent" property="responseContent"  />
+	<result column="keywords" property="keywords"  />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from keywordReply where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com._520it.es.domain.KeywordReply" useGeneratedKeys="true" keyProperty="id" >
+    insert into keywordReply 
+    (type,responseContent,keywords)
+    values 
+    (#{type},#{responseContent},#{keywords})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com._520it.es.domain.KeywordReply" >
+    update keywordReply
+    set
+	    type=#{type},
+	    responseContent=#{responseContent},
+	    keywords=#{keywords}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select * from keywordReply where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from keywordReply
+  </select>
+  <sql id="conditionSql">
+  	<where>
+        <if test="keyword!=null and keyword!=''">
+            (keywords like concat('%',#{keyword},'%')
+        </if>
+  	</where>
+  </sql>
+  <select id="queryByCondictionCount" resultType="long">
+  	select count(*) from keywordReply
+  	<include refid="conditionSql"/>
+  </select>
+  <select id="queryByConditionResult" resultMap="BaseResultMap">
+  	select * from keywordReply
+  	<include refid="conditionSql"/>
+  	limit #{start},#{rows}
+  </select>
+    <select id="selectClick" resultType="java.lang.String">
+        SELECT responseContent from keywordReply where keywords = "click"
+    </select>
+    <select id="selectReply" resultType="com._520it.es.domain.KeywordReply">
+        select * from keywordReply;
+    </select>
+</mapper>
