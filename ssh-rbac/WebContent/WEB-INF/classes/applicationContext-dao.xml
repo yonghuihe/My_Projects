@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	beans:javabean
+		spring是一个放java对象的容器，把放在spring中的对象称之为javabean
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	 <bean id="employeeDao" class="com.company.ssh.dao.impl.EmployeeDaoImpl" parent="baseDao"/>
+	 <bean id="departmentDao" class="com.company.ssh.dao.impl.DepartmentDaoImpl" parent="baseDao"/>
+	 <bean id="permissionDao" class="com.company.ssh.dao.impl.PermissionDaoImpl" parent="baseDao"/>
+	 <bean id="roleDao" class="com.company.ssh.dao.impl.RoleDaoImpl" parent="baseDao"/>
+</beans>
