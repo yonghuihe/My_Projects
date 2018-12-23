@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        ">
+
+	<!-- 引出dao配置的bean -->
+	<import resource="classpath:applicationContext-dao.xml"/> 
+	<import resource="classpath:applicationContext-service.xml"/>
+	<import resource="classpath:applicationContext-action.xml"/>
+<!-- 	<bean id="baseDAO" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean> -->
+<!-- 	<bean id="employeeDAO" class="com._520it.ssh.dao.impl.EmployeeDAOImpl">
+	   <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="employeeService" class="com._520it.ssh.service.impl.EmployeeServiceImpl">
+		<property name="dao" ref="employeeDAO" />
+	</bean> -->
+
+
+	<!-- 读取db.properties文件 -->
+	<context:property-placeholder location="classpath:db.properties"
+		system-properties-mode="NEVER" />
+
+	<!-- 配置连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<!-- 配置SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- 配置SessionFactory的属性 -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<!-- 配置是否显示sql,创建表,方言等 -->
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+				hibernate.show_sql=true
+				hibernate.hbm2ddl.auto=update
+			</value>
+		</property>
+		<!-- 管理配置hbm文件 -->
+		<property name="mappingLocations" value="classpath:com/_520it/ssh/domain/*.hbm.xml" />
+	</bean>
+
+	<!-- 配置事务 :事务管理器 -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- what -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- where -->
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* com._520it.ssh.service.impl.*Service*.*(..))"
+			id="txPoincut" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoincut" />
+	</aop:config>
+</beans>
