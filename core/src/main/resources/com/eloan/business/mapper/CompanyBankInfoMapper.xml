@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.CompanyBankInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.CompanyBankInfo" >
+    <id column="id" property="id" />
+    <result column="bankname" property="bankname" />
+    <result column="accountname" property="accountname" />
+    <result column="banknumber" property="banknumber" />
+    <result column="bankforkname" property="bankforkname" />
+    <result column="iconCls" property="iconCls" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from companybankinfo
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="CompanyBankInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into companybankinfo (bankname, accountname, banknumber, 
+      bankforkname, iconCls)
+    values (#{bankname}, #{accountname}, #{banknumber}, 
+      #{bankforkname}, #{iconCls})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="CompanyBankInfo" >
+    update companybankinfo
+    set bankname = #{bankname},
+      accountname = #{accountname},
+      banknumber = #{banknumber},
+      bankforkname = #{bankforkname},
+      iconCls = #{iconCls}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, bankname, accountname, banknumber, bankforkname, iconCls
+    from companybankinfo
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, bankname, accountname, banknumber, bankforkname, iconCls
+    from companybankinfo
+  </select>
+  
+  <sql id="Base_Column_List">
+	id, bankname, accountname, banknumber, bankforkname
+  </sql>
+  
+  <select id="queryForCount" resultType="int">
+  	select count(id)
+  	from companybankinfo
+  </select>
+  <select id="query" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from companybankinfo
+  	<if test="pageSize>-1">
+  		LIMIT #{start},#{pageSize}
+  	</if>
+  </select>
+</mapper>

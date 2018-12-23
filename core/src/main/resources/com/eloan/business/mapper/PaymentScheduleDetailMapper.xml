@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.PaymentScheduleDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.PaymentScheduleDetail" >
+    <id column="id" property="id" />
+    <result column="bidAmount" property="bidAmount" />
+    <result column="bidId" property="bidId" />
+    <result column="paymentScheduleId" property="paymentScheduleId" />
+    <result column="investorId" property="investorId" />
+    <result column="bidRequestId" property="bidRequestId" />
+    <result column="returnType" property="returnType" />
+    <result column="payDate" property="payDate" />
+    <result column="deadLine" property="deadLine" />
+    <result column="monthIndex" property="monthIndex" />
+    <result column="totalAmount" property="totalAmount" />
+    <result column="principal" property="principal" />
+    <result column="interest" property="interest" />
+    
+    <association property="borrowUser"  javaType="Logininfo" columnPrefix="bu_" 
+     	resultMap="com.eloan.base.mapper.LogininfoMapper.SimpleResultMap"/>
+     	
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from paymentscheduledetail
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="PaymentScheduleDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into paymentscheduledetail (bidAmount, bidId, paymentScheduleId, borrowUser_id, investorId, bidRequestId, 
+      returnType, payDate, deadLine, monthIndex, totalAmount, principal, interest)
+    values (#{bidAmount}, #{bidId}, #{paymentScheduleId}, #{borrowUser.id}, #{investorId}, #{bidRequestId}, 
+      #{returnType}, #{payDate}, #{deadLine}, #{monthIndex}, #{totalAmount}, #{principal}, #{interest})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="PaymentScheduleDetail" >
+    update paymentscheduledetail
+    set bidAmount = #{bidAmount},
+      bidId = #{bidId},
+      paymentScheduleId = #{paymentScheduleId},
+      borrowUser_id = #{borrowUser.id},
+      investorId = #{investorId},
+      bidRequestId = #{bidRequestId},
+      returnType = #{returnType},
+      payDate = #{payDate},
+      deadLine = #{deadLine},
+      monthIndex = #{monthIndex},
+      totalAmount = #{totalAmount},
+      principal = #{principal},
+      interest = #{interest}
+    where id = #{id}
+  </update>
+  
+  <sql id="base_column">
+  	p.id, p.bidAmount, p.bidId, p.paymentScheduleId, p.investorId, p.bidRequestId, 
+    p.returnType, p.payDate, p.deadLine, p.monthIndex, p.totalAmount, p.principal, p.interest,
+    bu.id as bu_id, bu.username as bu_username
+  </sql>
+  
+  <select id="selectByPaymentScheduleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="base_column"/>
+    from paymentscheduledetail p join logininfo bu on p.borrowUser_id = bu.id
+    where p.paymentScheduleId = #{paymentScheduleId}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select <include refid="base_column"/>
+    from paymentscheduledetail p join logininfo bu on p.borrowUser_id = bu.id
+  </select>
+  
+</mapper>

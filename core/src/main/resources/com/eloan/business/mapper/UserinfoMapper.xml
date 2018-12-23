@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.UserinfoMapper">
+
+	<resultMap id="BaseResultMap" type="UserInfo">
+		<id column="id" property="id" />
+		<result column="version" property="version" />
+		<result column="bitState" property="bitState" />
+		<result column="realName" property="realName" />
+		<result column="idNumber" property="idNumber" />
+		<result column="phoneNumber" property="phoneNumber" />
+		<result column="authScore" property="authScore" />
+		<result column="email" property="email" />
+		<result column="realauthId" property="realauthId" />
+
+		<association property="incomeGrade" column="incomeGrade_id"
+			select="com.eloan.base.mapper.SystemDictionaryItemMapper.selectByPrimaryKey" />
+		<association property="marriage" column="marriage_id"
+			select="com.eloan.base.mapper.SystemDictionaryItemMapper.selectByPrimaryKey" />
+		<association property="kidCount" column="kidCount_id"
+			select="com.eloan.base.mapper.SystemDictionaryItemMapper.selectByPrimaryKey" />
+		<association property="educationBackground" column="educationBackground_id"
+			select="com.eloan.base.mapper.SystemDictionaryItemMapper.selectByPrimaryKey" />
+		<association property="houseCondition" column="houseCondition_id"
+			select="com.eloan.base.mapper.SystemDictionaryItemMapper.selectByPrimaryKey" />
+	</resultMap>
+
+	<sql id="base_column">
+		id,
+		version,
+		bitState,
+		realName,
+		idNumber,
+		phoneNumber,
+		incomeGrade_id,
+		marriage_id,
+		authScore,
+		realauthId,
+		email,
+		kidCount_id,
+		educationBackground_id,
+		houseCondition_id
+	</sql>
+
+	<insert id="insert" keyProperty="id">
+		INSERT INTO userinfo (
+			id,
+			version,
+			bitState,
+			realName,
+			authScore,
+			email,
+			idNumber,
+			phoneNumber,
+			incomeGrade_id,
+			marriage_id,
+			kidCount_id,
+			educationBackground_id,
+			houseCondition_id)
+		VALUES
+			(#{id},0, #{bitState}, #{realName}, #{authScore},#{email},#{idNumber},
+			#{phoneNumber}, #{incomeGrade.id},
+			#{marriage.id}, #{kidCount.id}, #{educationBackground.id}, #{houseCondition.id})
+	</insert>
+
+	<update id="updateByPrimaryKey">
+		UPDATE userinfo
+		SET version = version + 1,
+			bitState = #{bitState},
+			realName = #{realName},
+			idNumber = #{idNumber},
+			authScore = #{authScore},
+			email = #{email},
+			realauthId = #{realauthId},
+			phoneNumber = #{phoneNumber},
+			incomeGrade_id = #{incomeGrade.id},
+			marriage_id = #{marriage.id},
+			kidCount_id = #{kidCount.id},
+			educationBackground_id =
+			#{educationBackground.id},
+			houseCondition_id = #{houseCondition.id}
+		WHERE
+			id = #{id} and version = #{version}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" >
+		DELETE
+		FROM
+			userinfo
+		WHERE
+			id = #{id} and version = #{version}
+	</delete>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		SELECT
+			<include refid="base_column" />
+		FROM
+			userinfo
+		WHERE
+			id = #{id}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="base_column" />
+		FROM
+			userinfo
+	</select>
+
+	<select id="queryByPhoneNumber" resultMap="BaseResultMap">
+		SELECT
+			<include refid="base_column" />
+		FROM
+			userinfo
+		WHERE
+			phoneNumber = #{phoneNumber}
+	</select>
+	
+</mapper>

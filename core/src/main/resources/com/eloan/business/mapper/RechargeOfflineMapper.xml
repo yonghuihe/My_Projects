@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.RechargeOfflineMapper" >
+
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.RechargeOffline" >
+    <id column="id" property="id" />
+    <result column="state" property="state" />
+    <result column="remark" property="remark" />
+    <result column="auditTime" property="auditTime" />
+    <result column="applyTime" property="applyTime" />
+    <result column="tradeCode" property="tradeCode" />
+    <result column="tradeTime" property="tradeTime" />
+    <result column="amount" property="amount" />
+    <result column="note" property="note" />
+    
+    <association property="bankInfo" column="bankinfo_id" select="com.eloan.business.mapper.CompanyBankInfoMapper.selectByPrimaryKey"></association>
+    <association property="auditor" columnPrefix="au_" javaType="Logininfo">
+    	<id column="id" property="id"/>
+    	<result column="username" property="username"/>
+    </association>
+    <association property="applier" columnPrefix="ap_" javaType="Logininfo">
+    	<id column="id" property="id"/>
+    	<result column="username" property="username"/>
+    </association>
+  </resultMap>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from rechargeoffline
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="RechargeOffline" useGeneratedKeys="true" keyProperty="id" >
+    insert into rechargeoffline 
+    (state, remark, auditTime,applyTime, auditor_id, applier_id, tradeCode, tradeTime, amount, note, bankinfo_id)
+    values 
+    (#{state}, #{remark}, #{auditTime}, #{applyTime}, #{auditor.id}, #{applier.id}, #{tradeCode}, #{tradeTime}, #{amount}, #{note}, #{bankInfo.id})
+  </insert>
+  <update id="updateByPrimaryKey" >
+    update rechargeoffline
+    set state = #{state},
+      remark = #{remark},
+      auditTime = #{auditTime},
+      applyTime = #{applyTime},
+      auditor_id = #{auditor.id},
+      applier_id = #{applier.id},
+      tradeCode = #{tradeCode},
+      tradeTime = #{tradeTime},
+      amount = #{amount},
+      note = #{note},
+      bankinfo_id = #{bankInfo.id}
+    where id = #{id}
+  </update>
+  
+  <sql id="Base_Column_List">
+  	r.id, r.bankinfo_id, r.state, r.remark, r.auditTime, r.applyTime, r.tradeCode, r.tradeTime, r.amount, r.note, 
+  	au.id as au_id, au.username as au_username, ap.id as ap_id, ap.username as ap_username
+  </sql>
+  
+  <sql id="Base_Where">
+  	<where>
+  		<if test="applierId != null ">
+  			AND r.applier_id = #{applierId}
+  		</if>
+  		<if test="bankinfoId > -1">
+  			AND r.bankinfo_id = #{bankinfoId}
+  		</if>
+  		<if test="tradeCode != null">
+  			AND r.tradeCode = #{tradeCode}
+  		</if>
+  		<if test="beginDate != null">
+  			AND r.applyTime &gt;= #{beginDate}
+  		</if>
+  		<if test="endDate != null">
+  			AND r.applyTime &lt;= #{endDate}
+  		</if>
+  		<if test="state >= 0">
+  			AND r.state = #{state}
+  		</if>
+  	</where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List"/>
+    from rechargeoffline r join logininfo ap on r.applier_id = ap.id left join logininfo au on r.auditor_id = au.id
+    where r.id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List"/>
+    from rechargeoffline r join logininfo ap on r.applier_id = ap.id left join logininfo au on r.auditor_id = au.id
+  </select>
+  
+  <select id="queryForCount" resultType="int" >
+  	select count(r.id) 
+  	from rechargeoffline r
+  </select>
+  
+  <select id="query" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from rechargeoffline r join logininfo ap on r.applier_id = ap.id left join logininfo au on r.auditor_id = au.id
+  	<include refid="Base_Where"/>
+  	<if test="pageSize>0">
+  		LIMIT #{start},#{pageSize}
+  	</if>
+  </select>
+  
+</mapper>

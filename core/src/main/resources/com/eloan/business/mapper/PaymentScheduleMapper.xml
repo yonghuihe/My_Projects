@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.PaymentScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.PaymentSchedule" >
+    <id column="id" property="id" />
+    <result column="deadLine" property="deadLine" />
+    <result column="payDate" property="payDate" />
+    <result column="totalAmount" property="totalAmount" />
+    <result column="principal" property="principal" />
+    <result column="interest" property="interest" />
+    <result column="monthIndex" property="monthIndex" />
+    <result column="state" property="state" />
+    <result column="bidRequestType" property="bidRequestType" />
+    <result column="returnType" property="returnType" />
+    <result column="bidRequestId" property="bidRequestId" />
+    <result column="bidRequestTitle" property="bidRequestTitle" />
+    
+    <association property="borrowUser"  javaType="Logininfo" columnPrefix="bu_" 
+    	resultMap="com.eloan.base.mapper.LogininfoMapper.SimpleResultMap"/>
+    
+    <collection property="details" ofType="PaymentScheduleDetail" column="id" 
+    	select="com.eloan.business.mapper.PaymentScheduleDetailMapper.selectByPaymentScheduleId"/>
+    
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from paymentschedule
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="PaymentSchedule" useGeneratedKeys="true" keyProperty="id" >
+    insert into paymentschedule (deadLine, payDate, totalAmount, principal, interest, monthIndex, 
+      state, bidRequestType, returnType, bidRequestId, borrowUser_id, bidRequestTitle)
+    values (#{deadLine}, #{payDate}, #{totalAmount}, #{principal}, #{interest}, #{monthIndex}, 
+      #{state}, #{bidRequestType}, #{returnType}, #{bidRequestId}, #{borrowUser.id}, #{bidRequestTitle})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="PaymentSchedule" >
+    update paymentschedule
+    set deadLine = #{deadLine},
+      payDate = #{payDate},
+      totalAmount = #{totalAmount},
+      principal = #{principal},
+      interest = #{interest},
+      monthIndex = #{monthIndex},
+      state = #{state},
+      bidRequestType = #{bidRequestType},
+      returnType = #{returnType},
+      bidRequestId = #{bidRequestId},
+      borrowUser_id = #{borrowUser.id},
+      bidRequestTitle = #{bidRequestTitle}
+    where id = #{id}
+  </update>
+  
+  <sql id="base_column">
+  	p.id, p.deadLine, p.payDate, p.totalAmount, p.principal, p.interest, p.monthIndex, p.state, 
+    p.bidRequestType, p.returnType, p.bidRequestId, p.borrowUser_id, p.bidRequestTitle,
+    bu.id as bu_id, bu.username as bu_username
+  </sql>
+  
+  <sql id="base_where">
+  	<where>
+  		<if test="beginDate != null">
+  			AND p.deadLine &gt;= #{beginDate}
+  		</if>
+  		<if test="endDate != null">
+  			AND p.deadLine &lt;= #{endDate}
+  		</if>
+  		<if test="state > -1">
+  			AND p.state = #{state}
+  		</if>
+  		<if test="userinfoId != null">
+  			AND p.borrowUser_id = #{userinfoId}
+  		</if>
+  	</where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="base_column"/>
+    from paymentschedule p join logininfo bu on p.borrowUser_id = bu.id
+    where p.id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select <include refid="base_column"/>
+    from paymentschedule p join logininfo bu on p.borrowUser_id = bu.id
+  </select>
+  
+  <select id="queryForCount" resultType="int">
+  	select count(p.id)
+  	from paymentschedule p join logininfo bu on p.borrowUser_id = bu.id
+  	<include refid="base_where"/>
+  </select>
+  <select id="query" resultMap="BaseResultMap">
+  	select <include refid="base_column"/>
+  	from paymentschedule p join logininfo bu on p.borrowUser_id = bu.id
+  	<include refid="base_where"/>
+  	<if test="pageSize>0">
+  		LIMIT #{start},#{pageSize}
+  	</if>
+  </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.MoneyWithDrawMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.MoneyWithDraw" >
+    <id column="id" property="id" />
+    <result column="amount" property="amount" />
+    <result column="chargeFee" property="chargeFee" />
+    <result column="bankName" property="bankName" />
+    <result column="bankNumber" property="bankNumber" />
+    <result column="accountName" property="accountName" />
+    <result column="forkName" property="forkName" />
+    <result column="state" property="state" />
+    <result column="remark" property="remark" />
+    <result column="auditTime" property="auditTime" />
+    <result column="applyTime" property="applyTime" />
+    
+    <association property="applier" javaType="Logininfo" columnPrefix="ap_"
+    	resultMap="com.eloan.base.mapper.LogininfoMapper.SimpleResultMap"/>
+    <association property="auditor" javaType="Logininfo" columnPrefix="au_"
+    	resultMap="com.eloan.base.mapper.LogininfoMapper.SimpleResultMap"/>
+    	
+  </resultMap>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from moneywithdraw
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="MoneyWithDraw" useGeneratedKeys="true" keyProperty="id" >
+    insert into moneywithdraw (amount, chargeFee, bankName, bankNumber, accountName, forkName, 
+      state, remark, auditTime, applyTime, auditor_id, applier_id)
+    values (#{amount}, #{chargeFee}, #{bankName}, #{bankNumber}, #{accountName}, #{forkName}, 
+      #{state}, #{remark}, #{auditTime}, #{applyTime}, #{auditor.id}, #{applier.id})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="MoneyWithDraw" >
+    update moneywithdraw
+    set amount = #{amount},
+      chargeFee = #{chargeFee},
+      bankName = #{bankName},
+      bankNumber = #{bankNumber},
+      accountName = #{accountName},
+      forkName = #{forkName},
+      state = #{state},
+      remark = #{remark},
+      auditTime = #{auditTime},
+      applyTime = #{applyTime},
+      auditor_id = #{auditor.id},
+      applier_id = #{applier.id}
+    where id = #{id}
+  </update>
+  
+  <sql id="base_column">
+  	m.id, m.amount, m.chargeFee, m.bankName, m.bankNumber, m.accountName, m.forkName, m.state, 
+    m.remark, m.auditTime, m.applyTime, au.id as au_id, au.username as au_username, ap.id as ap_id, ap.username as ap_username
+  </sql>
+  
+  <sql id="base_where">
+  	<where>
+  		<if test="beginDate != null">
+  			m.applyTime &gt;= #{beginDate}
+  		</if>
+  		<if test="endDate != null">
+  			m.applyTime &lt;= #{endDate}
+  		</if>
+  		<if test="state > -1">
+  			m.state = #{state}
+  		</if>
+  	</where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="base_column"/>
+    from moneywithdraw m join logininfo ap on m.applier_id = ap.id left join logininfo au on m.auditor_id = au.id 
+    where m.id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select <include refid="base_column"/>
+    from moneywithdraw m join logininfo ap on m.applier_id = ap.id left join logininfo au on m.auditor_id = au.id 
+  </select>
+  
+  <select id="queryForCount" parameterType="com.eloan.business.query.MoneyWithDrawQueryObject" resultType="int">
+  	select count(m.id)
+  	from moneywithdraw m join logininfo ap on m.applier_id = ap.id left join logininfo au on m.auditor_id = au.id 
+  	<include refid="base_where"/>
+  </select>
+  
+  <select id="query" parameterType="com.eloan.business.query.MoneyWithDrawQueryObject" resultMap="BaseResultMap">
+  	select <include refid="base_column"/>
+  	from moneywithdraw m join logininfo ap on m.applier_id = ap.id left join logininfo au on m.auditor_id = au.id 
+  	<include refid="base_where"/>
+  	<if test="pageSize > 0">
+  		LIMIT #{start},#{pageSize}
+  	</if>
+  </select>
+  
+</mapper>

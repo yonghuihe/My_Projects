@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.VerifyCodeMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.VerifyCode" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="phoneNumber" property="phoneNumber" />
+    <result column="randomCode" property="randomCode" />
+    <result column="lastSendTime" property="lastSendTime" />
+    <result column="content" property="content" />
+  </resultMap>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from verifycode
+    where id = #{id}
+  </delete>
+  
+  <insert id="insert" parameterType="com.eloan.business.domain.VerifyCode" useGeneratedKeys="true" keyProperty="id" >
+    insert into verifycode (phoneNumber, randomCode, lastSendTime, content)
+    values (#{phoneNumber}, #{randomCode}, #{lastSendTime}, #{content})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.eloan.business.domain.VerifyCode" >
+    update verifycode
+    set phoneNumber = #{phoneNumber},
+      randomCode = #{randomCode},
+      lastSendTime = #{lastSendTime},
+      content = #{content}
+    where id = #{id}
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, phoneNumber, randomCode, lastSendTime, content
+    from verifycode
+    where id = #{id}
+  </select>
+
+  <select id="queryByPhoneNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, phoneNumber, randomCode, lastSendTime, content
+    from verifycode
+    where phoneNumber = #{phoneNumber}
+  </select>
+  
+  <select id="queryByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, phoneNumber, randomCode, lastSendTime, content
+    from verifycode
+    where randomCode = #{code}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, phoneNumber, randomCode, lastSendTime, content
+    from verifycode
+  </select>
+</mapper>

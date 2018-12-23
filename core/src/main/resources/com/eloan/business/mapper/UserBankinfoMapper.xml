@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.UserBankinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.UserBankinfo" >
+    <id column="id" property="id" />
+    <result column="bankName" property="bankName" />
+    <result column="accountName" property="accountName" />
+    <result column="bankNumber" property="bankNumber" />
+    <result column="forkName" property="forkName" />
+    <result column="userinfoId" property="userinfoId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from userbankinfo
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="UserBankinfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into userbankinfo (bankName, accountName, bankNumber, 
+      forkName, userinfoId)
+    values (#{bankName}, #{accountName}, #{bankNumber}, 
+      #{forkName}, #{userinfoId})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="UserBankinfo" >
+    update userbankinfo
+    set bankName = #{bankName},
+      accountName = #{accountName},
+      bankNumber = #{bankNumber},
+      forkName = #{forkName},
+      userinfoId = #{userinfoId}
+    where id = #{id}
+  </update>
+  <select id="selectByUserInfoId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, bankName, accountName, bankNumber, forkName, userinfoId
+    from userbankinfo
+    where userinfoId = #{userinfoId}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, bankName, accountName, bankNumber, forkName, userinfoId
+    from userbankinfo
+  </select>
+</mapper>

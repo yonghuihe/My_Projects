@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.BidMapper" >
+  <resultMap id="BaseResultMap" type="Bid" >
+    <id column="id" property="id" />
+    <result column="actualRate" property="actualRate" />
+    <result column="availableAmount" property="availableAmount" />
+    <result column="bidrequest_id" property="bidRequestId" />
+    <result column="bidTime" property="bidTime" />
+    <result column="bidRequestTitle" property="bidRequestTitle" />
+    <result column="bidRequestState" property="bidRequestState"/>
+    
+    <association property="bidUser" javaType="Logininfo" columnPrefix="l_">
+    	<id property="id" column="id"/>
+    	<result property="username" column="username"/>
+    </association>
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.eloan.business.domain.Bid" useGeneratedKeys="true" keyProperty="id" >
+    insert into bid (actualRate, availableAmount, bidrequest_id, bidUser_id, bidTime, bidRequestTitle)
+      values (#{actualRate}, #{availableAmount}, #{bidRequestId}, #{bidUser.id}, #{bidTime}, #{bidRequestTitle})
+  </insert>
+  
+  <sql id="base_column">
+  	b.id, b.actualRate, b.availableAmount, b.bidrequest_id, b.bidTime, b.bidRequestTitle,l.id as l_id,l.username as l_username,br.bidRequestState
+  </sql>
+  
+  <sql id="base_where">
+  	<where>
+  		<if test="bidUserId!=null">
+  			AND b.bidUser_id = #{bidUserId}
+  		</if>
+  		<if test="state>-1">
+  			AND br.bidRequestState = #{state}
+  		</if>
+  	</where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="base_column"/>
+    from bid b join bidrequest br on b.bidrequest_id = br.id join logininfo l on b.bidUser_id = l.id
+    where b.id = #{id}
+  </select>
+  
+  <select id="selectByBidRequestId" resultMap="BaseResultMap">
+  	select b.id, b.actualRate, b.availableAmount, b.bidrequest_id, b.bidTime, b.bidRequestTitle,l.id as l_id,l.username as l_username
+  	from bid b join logininfo l on b.biduser_id = l.id
+  	where b.bidrequest_id = #{bidRequestId}
+  </select>
+  
+  <select id="queryForCount" resultType="int">
+  	select count(b.id)
+  	from bid b join bidrequest br on b.bidrequest_id = br.id
+  	<include refid="base_where"/>
+  </select>
+  
+  <select id="query" resultMap="BaseResultMap">
+  	select <include refid="base_column"/>
+  	from bid b join bidrequest br on b.bidrequest_id = br.id join logininfo l on b.bidUser_id = l.id
+  	<include refid="base_where"/>
+  	<if test="pageSize>0">
+  		LIMIT #{start},#{pageSize}
+  	</if>
+  </select>
+</mapper>

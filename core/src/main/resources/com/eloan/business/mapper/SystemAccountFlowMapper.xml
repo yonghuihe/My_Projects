@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloan.business.mapper.SystemAccountFlowMapper" >
+  <resultMap id="BaseResultMap" type="com.eloan.business.domain.SystemAccountFlow" >
+    <id column="id" property="id" />
+    <result column="actionTime" property="actionTime" />
+    <result column="actionType" property="actionType" />
+    <result column="note" property="note" />
+    <result column="amount" property="amount" />
+    <result column="usableAmount" property="usableAmount" />
+    <result column="freezedAmount" property="freezedAmount" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from systemaccountflow
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="SystemAccountFlow" useGeneratedKeys="true" keyProperty="id" >
+    insert into systemaccountflow (actionTime, actionType, note, amount, usableAmount, freezedAmount)
+    values (#{actionTime}, #{actionType}, #{note}, #{amount}, #{usableAmount}, #{freezedAmount})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="SystemAccountFlow" >
+    update systemaccountflow
+    set actionTime = #{actionTime},
+      actionType = #{actionType},
+      note = #{note},
+      amount = #{amount},
+      usableAmount = #{usableAmount},
+      freezedAmount = #{freezedAmount}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, actionTime, actionType, note, amount, usableAmount, freezedAmount
+    from systemaccountflow
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, actionTime, actionType, note, amount, usableAmount, freezedAmount
+    from systemaccountflow
+  </select>
+</mapper>
