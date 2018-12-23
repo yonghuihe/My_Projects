@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 如果要在web应用中使用@AutoWired标签,加上这个元素 -->
+	<context:annotation-config />
+	<!-- 引入其他的配置文件 -->
+	<import resource="classpath:dao.xml" />
+	<import resource="classpath:service.xml" />
+	<import resource="classpath:mvc.xml" />
+
+	<!-- 引入db.proeprties文件 -->
+	<context:property-placeholder location="classpath:db.properties"
+		system-properties-mode="NEVER" />
+
+	<!-- 配置dataSource -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${db.driverClassName}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="filters" value="config,stat" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+	</bean>
+
+	<!-- 配置sessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- 配置连接信息 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置映射文件 配置的是hbm.xml文件所在的目录地址,spring会自动的扫描这些目录,把所有的hbm.xml文件自动映入 -->
+		<property name="mappingDirectoryLocations" value="classpath:com/xmg/minipss/domain" />
+		<!-- 配置hibernate信息,如果在classpath下有一个hibernate.proeprties文件, spring会自动的把这个properties文件中的配置项作为hibernate的配置项; 
+			<property name="hibernateProperties"> <value> hibernate.dialect=org.hibernate.dialect.MySQLDialect 
+			hibernate.hbm2ddl.auto=create hibernate.show_sql=true </value> </property> -->
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 配置事务切面 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.xmg.minipss.service.*Service.*(..))"
+			id="crudPC" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="crudPC" />
+	</aop:config>
+
+	<!-- 配置事务的属性 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean id="baseDAO" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+</beans>	

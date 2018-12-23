@@ -1,0 +1,49 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         http://www.springframework.org/schema/beans/spring-beans.xsd         http://www.springframework.org/schema/context         http://www.springframework.org/schema/context/spring-context.xsd         http://www.springframework.org/schema/aop         http://www.springframework.org/schema/aop/spring-aop.xsd         http://www.springframework.org/schema/tx         http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id="employeeAction" class="com.xmg.minipss.mvc.EmployeeAction"
+		scope="prototype">
+		<property name="employeeService" ref="employeeService" />
+		<property name="departmentService" ref="departmentService" />
+		<property name="roleService" ref="roleService" />
+	</bean>
+
+	<bean id="departmentAction" class="com.xmg.minipss.mvc.DepartmentAction"
+		scope="prototype">
+		<property name="departmentService" ref="departmentService" />
+	</bean>
+
+	<bean id="permissionAction" class="com.xmg.minipss.mvc.PermissionAction"
+		scope="prototype">
+		<property name="permissionService" ref="permissionService" />
+	</bean>
+
+	<bean id="roleAction" class="com.xmg.minipss.mvc.RoleAction"
+		scope="prototype">
+		<property name="roleService" ref="roleService" />
+		<property name="permissionService" ref="permissionService" />
+		<property name="systemMenuService" ref="systemMenuService" />
+	</bean>
+
+	<bean id="loginAction" class="com.xmg.minipss.mvc.LoginAction"
+		scope="prototype">
+		<property name="employeeService" ref="employeeService" />
+	</bean>
+	<bean id="brandAction" class="com.xmg.minipss.mvc.BrandAction"
+		scope="prototype">
+		<property name="brandService" ref="brandService" />
+	</bean>
+	<bean id="systemMenuAction" class="com.xmg.minipss.mvc.SystemMenuAction"
+		scope="prototype">
+		<property name="systemMenuService" ref="systemMenuService" />
+	</bean>
+
+	<bean id="productAction" class="com.xmg.minipss.mvc.ProductAction"
+		scope="prototype">
+		<property name="productService" ref="productService" />
+		<property name="brandService" ref="brandService" />
+	</bean>
+</beans>

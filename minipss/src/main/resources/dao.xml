@@ -1,0 +1,11 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans         http://www.springframework.org/schema/beans/spring-beans.xsd         http://www.springframework.org/schema/context         http://www.springframework.org/schema/context/spring-context.xsd         http://www.springframework.org/schema/aop         http://www.springframework.org/schema/aop/spring-aop.xsd         http://www.springframework.org/schema/tx         http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id="employeeDAO" class="com.xmg.minipss.dao.impl.EmployeeDAOImpl" parent="baseDAO"/>
+
+	<bean id="departmentDAO" class="com.xmg.minipss.dao.impl.DepartmentDAOImpl" parent="baseDAO"/>
+
+	<bean id="permissionDAO" class="com.xmg.minipss.dao.impl.PermissionDAOImpl" parent="baseDAO"/>
+
+	<bean id="roleDAO" class="com.xmg.minipss.dao.impl.RoleDAOImpl" parent="baseDAO"/>
+	<bean id="brandDAO" class="com.xmg.minipss.dao.impl.BrandDAOImpl" parent="baseDAO"/>
+<bean id="systemMenuDAO" class="com.xmg.minipss.dao.impl.SystemMenuDAOImpl" parent="baseDAO"/><bean id="productDAO" class="com.xmg.minipss.dao.impl.ProductDAOImpl" parent="baseDAO"/></beans>

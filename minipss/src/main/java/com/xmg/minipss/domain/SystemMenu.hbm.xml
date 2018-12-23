@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.xmg.minipss.domain">
+
+	<class name="SystemMenu" table="systemmenu">
+		<id name="id">
+			<generator class="native" />
+		</id>
+
+		<property name="sn" />
+		<property name="name" />
+		<property name="action" />
+
+		<many-to-one name="parent" column="PARENT_ID" />
+
+	</class>
+
+</hibernate-mapping>

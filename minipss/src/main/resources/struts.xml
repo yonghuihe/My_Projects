@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple" />
+
+	<package name="default" namespace="/" extends="struts-default,json-default">
+
+		<interceptors>
+			<interceptor name="loginCheck" class="com.xmg.minipss.util.LoginCheckInterceptor" />
+			<interceptor name="securityCheck" class="com.xmg.minipss.util.SecurityCheckInterceptor" />
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="loginCheck" />
+				<interceptor-ref name="securityCheck" />
+				<interceptor-ref name="store">
+					<param name="operationMode">AUTOMATIC</param>
+				</interceptor-ref>
+				<interceptor-ref name="paramsPrepareParamsStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="myStack" />
+
+		<!-- 全局的视图 -->
+		<global-results>
+			<result name="error">/WEB-INF/views/common/error.jsp</result>
+			<result name="nopermission">/WEB-INF/views/common/nopermission.jsp</result>
+			<result name="login">login.jsp</result>
+		</global-results>
+
+		<!-- 全局的异常处理 -->
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception" />
+		</global-exception-mappings>
+
+		<action name="login" class="loginAction" method="login">
+			<interceptor-ref name="paramsPrepareParamsStack" />
+			<result type="redirectAction">
+				<param name="actionName">main</param>
+			</result>
+		</action>
+
+		<action name="main" class="com.xmg.minipss.mvc.MainAction">
+			<result>/WEB-INF/views/main.jsp</result>
+		</action>
+		
+		<action name="systemMenu_*" class="systemMenuAction" method="{1}">
+			<result type="redirectAction">
+				<param name="actionName">systemMenu</param>
+				<param name="qo.parentId">${systemMenu.parent.id}</param>
+			</result>
+			<result name="jsonResult" type="json">
+				<param name="root">rootResult</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+			<result name="list">/WEB-INF/views/systemMenu/list.jsp</result>
+			<result name="input">/WEB-INF/views/systemMenu/input.jsp</result>
+		</action>
+
+		<action name="*_*" class="{1}Action" method="{2}">
+			<result type="redirectAction">
+				<param name="actionName">{1}</param>
+			</result>
+			<result name="list">/WEB-INF/views/{1}/list.jsp</result>
+			<result name="input">/WEB-INF/views/{1}/input.jsp</result>
+		</action>
+	</package>
+
+</struts>
