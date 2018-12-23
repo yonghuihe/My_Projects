@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="baseDao" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="employeeDao" class="com.company.pss.dao.impl.EmployeeDaoImpl" parent="baseDao"/>
+	<bean id="departmentDao" class="com.company.pss.dao.impl.DepartmentDaoImpl" parent="baseDao"/>
+	<bean id="permissionDao" class="com.company.pss.dao.impl.PermissionDaoImpl" parent="baseDao"/>
+	<bean id="roleDao" class="com.company.pss.dao.impl.RoleDaoImpl" parent="baseDao"/>
+	<bean id="systemMenuDao" class="com.company.pss.dao.impl.SystemMenuDaoImpl" parent="baseDao"/>
+	<bean id="brandDao" class="com.company.pss.dao.impl.BrandDaoImpl" parent="baseDao"/>
+	<bean id="supplierDao" class="com.company.pss.dao.impl.SupplierDaoImpl" parent="baseDao"/>
+	<bean id="productDao" class="com.company.pss.dao.impl.ProductDaoImpl" parent="baseDao"/>
+	<bean id="orderBillDao" class="com.company.pss.dao.impl.OrderBillDaoImpl" parent="baseDao"/>
+	<bean id="depotDao" class="com.company.pss.dao.impl.DepotDaoImpl" parent="baseDao"/>
+	<bean id="stockIncomeBillDao" class="com.company.pss.dao.impl.StockIncomeBillDaoImpl" parent="baseDao"/>
+	<bean id="stockIncomeBillItemDao" class="com.company.pss.dao.impl.StockIncomeBillItemDaoImpl" parent="baseDao"/>
+	<bean id="clientDao" class="com.company.pss.dao.impl.ClientDaoImpl" parent="baseDao"/>
+	<bean id="stockOutcomeBillDao" class="com.company.pss.dao.impl.StockOutcomeBillDaoImpl" parent="baseDao"/>
+	<bean id="stockOutcomeBillItemDao" class="com.company.pss.dao.impl.StockOutcomeBillItemDaoImpl" parent="baseDao"/>
+	<bean id="productStockDao" class="com.company.pss.dao.impl.ProductStockDaoImpl" parent="baseDao"/>
+	<bean id="chartDao" class="com.company.pss.dao.impl.ChartDaoImpl" parent="baseDao"/>
+<bean id="saleAccountDao" class="com.company.pss.dao.impl.SaleAccountDaoImpl" parent="baseDao"/></beans>

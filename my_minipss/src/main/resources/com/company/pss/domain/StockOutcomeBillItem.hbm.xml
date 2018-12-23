@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.company.pss.domain">
+
+	<class name="StockOutcomeBillItem" table="stockoutcomebillitem">
+		<id name="id">
+			<generator class="native" />
+		</id>
+		
+		<property name="salePrice" />
+		<property name="remark" />
+		<property name="number" />
+		<property name="amount" />
+		
+		<many-to-one name="product" column="product_id"/>
+		<many-to-one name="stockOutcomeBill" column="stockOutcomeBill_id"/>
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="employeeService" class="com.company.pss.service.impl.EmployeeServiceImpl">
+		<property name="employeeDao" ref="employeeDao"/>
+	</bean>
+	<bean id="departmentService" class="com.company.pss.service.impl.DepartmentServiceImpl">
+		<property name="departmentDao" ref="departmentDao"/>
+	</bean>
+	<bean id="permissionService" class="com.company.pss.service.impl.PermissionServiceImpl">
+		<property name="permissionDao" ref="permissionDao"/>
+	</bean>
+	<bean id="roleService" class="com.company.pss.service.impl.RoleServiceImpl">
+		<property name="roleDao" ref="roleDao"/>
+	</bean>
+	<bean id="systemMenuService" class="com.company.pss.service.impl.SystemMenuServiceImpl">
+		<property name="systemMenuDao" ref="systemMenuDao"/>
+	</bean>
+	<bean id="brandService" class="com.company.pss.service.impl.BrandServiceImpl">
+		<property name="brandDao" ref="brandDao"/>
+	</bean>
+	<bean id="supplierService" class="com.company.pss.service.impl.SupplierServiceImpl">
+		<property name="supplierDao" ref="supplierDao"/>
+	</bean>
+	<bean id="productService" class="com.company.pss.service.impl.ProductServiceImpl">
+		<property name="productDao" ref="productDao"/>
+	</bean>
+	<bean id="orderBillService" class="com.company.pss.service.impl.OrderBillServiceImpl">
+		<property name="orderBillDao" ref="orderBillDao"/>
+	</bean>
+	<bean id="depotService" class="com.company.pss.service.impl.DepotServiceImpl">
+		<property name="depotDao" ref="depotDao"/>
+	</bean>
+	<bean id="stockIncomeBillService" class="com.company.pss.service.impl.StockIncomeBillServiceImpl">
+		<property name="stockIncomeBillDao" ref="stockIncomeBillDao"/>
+		<property name="productStockService" ref="productStockService"/>
+	</bean>
+	<bean id="stockIncomeBillItemService" class="com.company.pss.service.impl.StockIncomeBillItemServiceImpl">
+		<property name="stockIncomeBillItemDao" ref="stockIncomeBillItemDao"/>
+	</bean>
+	<bean id="clientService" class="com.company.pss.service.impl.ClientServiceImpl">
+		<property name="clientDao" ref="clientDao"/>
+	</bean>
+	<bean id="stockOutcomeBillService" class="com.company.pss.service.impl.StockOutcomeBillServiceImpl">
+		<property name="stockOutcomeBillDao" ref="stockOutcomeBillDao"/>
+		<property name="productStockService" ref="productStockService"/>
+		<property name="saleAccountService" ref="saleAccountService"/>
+	</bean>
+	<bean id="stockOutcomeBillItemService" class="com.company.pss.service.impl.StockOutcomeBillItemServiceImpl">
+		<property name="stockOutcomeBillItemDao" ref="stockOutcomeBillItemDao"/>
+	</bean>
+	<bean id="productStockService" class="com.company.pss.service.impl.ProductStockServiceImpl">
+		<property name="productStockDao" ref="productStockDao"/>
+	</bean>
+	<bean id="chartService" class="com.company.pss.service.impl.ChartServiceImpl">
+		<property name="chartDao" ref="chartDao"/>
+	</bean>
+<bean id="saleAccountService" class="com.company.pss.service.impl.SaleAccountServiceImpl">
+	<property name="saleAccountDao" ref="saleAccountDao"/>
+</bean></beans>

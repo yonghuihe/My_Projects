@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.company.pss.domain">
+
+	<class name="StockIncomeBill" table="stockincomebill">
+		<id name="id">
+			<generator class="native" />
+		</id>
+		
+		<property name="vdate" />
+		<property name="totalNumber" />
+		<property name="totalAmount" />
+		<property name="status" />
+		<property name="sn" />
+		<property name="inputTime" />
+		<property name="auditTime" />
+		
+		<many-to-one name="depot" column="depot_id"/>
+		<many-to-one name="auditor" column="auditor_id"/>
+		<many-to-one name="inputUser" column="inputUser_id"/>
+		
+		<bag name="stockIncomeBillItem" cascade="all-delete-orphan" inverse="true">
+			<key column="stockincomebill_id"/>
+			<one-to-many class="StockIncomeBillItem"/>
+		</bag>
+		
+	</class>
+
+</hibernate-mapping>

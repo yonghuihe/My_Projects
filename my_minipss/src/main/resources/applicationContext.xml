@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	beans:javabean
+		spring是一个放java对象的容器，把放在spring中的对象称之为javabean
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 引入其他配置文件 -->
+	<import resource="classpath:applicationContext-dao.xml"/>
+	<import resource="classpath:applicationContext-service.xml"/>
+	<import resource="classpath:applicationContext-mvc.xml"/>
+
+	<!-- 引入属性占位符 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+
+	<!-- 配置数据库连接 -->
+	 <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+	 	<property name="driverClassName" value="${db.driverClassName}"/>
+	 	<property name="url" value="${db.url}"/>
+	 	<property name="username" value="${db.username}"/>
+	 	<property name="password" value="${db.password}"/>
+	 </bean>
+	 
+	 <!-- 配置SessionFactory -->
+	 <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	 	<!--配置连接信息 -->
+	 	<property name="dataSource" ref="dataSource"/>
+	 	
+	 	<!-- 
+	 		配置映射文件 ：
+	 			配置的是hbm.xml文件所在的目录地址，spring会自动的扫描这些目录，把所有的hbm.xml文件自动引入
+	 			这个配置后面的内容可以使用classpath:前缀,注意是文件路径
+	 	-->
+	 	<property name="mappingDirectoryLocations" value="classpath:com/company/pss/domain"/>
+	 	
+	 	<!-- 
+	 		配置hibernate信息：
+	 			如果在classpath下会有一个hibernate.properties文件，
+	 			spring会自动把这个properties文件中的配置项作为hibernate的配置项
+	 	 -->
+	 	<!--
+		 	 <property name="hibernateProperties">
+		 		<value>
+		 			hibernate.dialect=org.hibernate.dialect.MySQLDialect
+		 			hibernate.hbm2ddl.auto=create
+		 			hibernate.show_sql=true
+		 		</value>
+		 	</property> 
+	 	-->
+	 </bean>
+	 
+	 <!-- 配置事务管理器 -->
+	 <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	 	<property name="sessionFactory" ref="sessionFactory"/>
+	 </bean>
+	 
+	 <!-- 配置切面 -->
+	 <aop:config proxy-target-class="true">
+	 	<aop:pointcut expression="execution(* com.company.pss.service.*Service.*(..))" id="pc"/>
+	 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
+	 </aop:config>
+	 
+	 <!-- 配置事务属性 -->
+	 <tx:advice id="txAdvice" transaction-manager="txManager">
+	 	<tx:attributes>
+	 		<tx:method name="get*" read-only="true"/>
+	 		<tx:method name="list*" read-only="true"/>
+	 		<tx:method name="query*" read-only="true"/>
+	 		<tx:method name="count*" read-only="true"/>
+	 		<tx:method name="*" propagation="REQUIRED"/>
+	 	</tx:attributes>
+	 </tx:advice>
+	 
+</beans>

@@ -1,0 +1,25 @@
+[
+
+  {"id":1,"pId":0,"name":"业务模块"},
+  {"id":2,"pId":0,"name":"系统模块"},
+  {"id":3,"pId":0,"name":"报表模块"},
+  
+  {"id":11,"pId":1,"name":"品牌管理","action":"brand"},
+  {"id":12,"pId":1,"name":"供应商管理","action":"supplier"},
+  {"id":13,"pId":1,"name":"商品管理","action":"product"},
+  {"id":14,"pId":1,"name":"仓库管理","action":"depot"},
+  {"id":15,"pId":1,"name":"客户管理","action":"client"},
+  {"id":16,"pId":1,"name":"采购订单管理","action":"orderBill"},
+  {"id":17,"pId":1,"name":"采购入库单管理","action":"stockIncomeBill"},
+  {"id":18,"pId":1,"name":"销售出库单管理","action":"srockOutcomeBill"},
+  
+  {"id":21,"pId":2,"name":"部门管理","action":"department"},
+  {"id":22,"pId":2,"name":"员工管理","action":"employee"},
+  {"id":23,"pId":2,"name":"权限管理","action":"permission"},
+  {"id":24,"pId":2,"name":"角色管理","action":"role"},
+  {"id":25,"pId":2,"name":"系统菜单管理","action":"systemMenu"},
+
+  {"id":31,"pId":3,"name":"即时库存报表","action":"productStock"},
+  {"id":32,"pId":3,"name":"订货报表","action":"chart_orderChart"},
+  {"id":33,"pId":3,"name":"销售报表","action":"chart_saleChart"},
+]

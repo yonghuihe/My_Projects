@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.company.pss.domain">
+
+	<class name="OrderBill" table="orderbill">
+		<id name="id">
+			<generator class="native" />
+		</id>
+		
+		<property name="sn" />
+		<property name="status" />
+		<property name="vdate" />
+		<property name="totalNumber" />
+		<property name="totalAmount" />
+		<property name="auditTime" />
+		<property name="inputTime" />
+		
+		<many-to-one name="inputUser" column="inputUser_id"/>
+		<many-to-one name="auditor" column="auditor_id"/>
+		<many-to-one name="supplier" column="supplier_id"/>
+		<bag name="orderBillItem" cascade="all-delete-orphan" inverse="true">
+			<key column="bill_id"/>
+			<one-to-many  class="OrderBillItem"/>
+		</bag>
+	</class>
+	
+	<class name="OrderBillItem" table="orderBillItem">
+		<id name="id">
+			<generator class="native"/>
+		</id>
+		
+		<property name="remark"/>
+		<property name="costPrice"/>
+		<property name="number"/>
+		<property name="amount"/>
+		
+		<many-to-one name="product" column="product_id"/>
+		<many-to-one name="orderBill" column="bill_id"/>
+		
+	</class>
+
+</hibernate-mapping>

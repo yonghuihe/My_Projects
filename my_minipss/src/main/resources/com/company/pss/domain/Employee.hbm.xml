@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- 
+	hibernate的映射文件：
+	package：映射文件的包名，配置了package下面直接使用类目
+ -->
+<hibernate-mapping package="com.company.pss.domain">
+	<!-- 
+		name:要映射的对象
+		table：要把对象保存的表
+	 -->
+	<class name="Employee" table="employee">
+		<!-- 
+			映射主键：
+			name：在类型里面那个属性作为主键
+			column:在表里面那个列作为主键
+		 -->
+		<id name="id" column="id">
+			<!-- 
+				主键的生成策略：
+				告诉hibernate怎么去处理主键，不同的生成策略对应着不同的SQL和不同的处理方式
+			 -->
+			<!-- <generator class="org.hibernate.id.enhanced.TableGenerator"/> -->
+			<generator class="native"/>
+		</id>
+		<!-- 
+			property:表示映射文件，或者属性
+			name：表示类型中的属性
+			column：表示要保存到数据库表中的列(如果：name、column相同可以省略column)
+		 -->
+		<property name="name" column="name"/>
+		<property name="password"/>		
+		<property name="email"/>		
+		<property name="age"/>		
+		<property name="admin"/>		
+		<many-to-one name="dept" column="dept_id"/>		
+		<bag name="roles" table="employees_roles">
+			<key column="employee_id"/>
+			<many-to-many class="Role" column="role_id"/>
+		</bag>
+	</class>
+</hibernate-mapping>

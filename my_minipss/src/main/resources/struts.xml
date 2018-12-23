@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<constant name="struts.enable.DynamicMethodInvocation" value="false"/>
+	<!--开发者模式：配置文件改变，不需要重启(default.peroperties中默认为：false) -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 禁用浏览器缓存：default.peroperties中默认为true， 在开发阶段我们希望每次请求都获得服务器的最新新响应，则可以设置为：false -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- struts主题：simple -->
+	<constant name="struts.ui.theme" value="simple"/>
+	<constant name="struts.locale" value="zh_CN"/>
+	
+	<package name="empPkg" extends="struts-default" namespace="/" >
+		<interceptors>
+			<interceptor name="loginCheck" class="com.company.pss.util.LoginCheckIntercepter"/>
+			<interceptor name="sercurityInterceptor" class="com.company.pss.util.SercurityInterceptor"/>
+			<interceptor name="parametersInterceptor" class="com.company.pss.util.ParametersInterceptor"/>
+			<interceptor-stack name="MyStack">
+				<interceptor-ref name="loginCheck"/>
+				<interceptor-ref name="sercurityInterceptor"/>
+				<!-- 在执行之前添加store拦截器，用来存储当前action中的异常信息 -->
+				<interceptor-ref name="store">
+					<param name="operationMode">AUTOMATIC</param>
+				</interceptor-ref>
+				<!-- <interceptor-ref name="parametersInterceptor"/> -->
+				<interceptor-ref name="paramsPrepareParamsStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="MyStack"/>
+    	<!-- 全局的结果视图 -->
+		<global-results>
+			<result name="error">/WEB-INF/views/common/error.jsp</result>
+			<result name="nopermission">/WEB-INF/views/common/nopermission.jsp</result>
+			<result name="login">login.jsp</result>
+		</global-results>
+		<!-- 全局的异常处理 -->
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"/>
+		</global-exception-mappings>
+		
+		<!-- 
+			Struts和Spring集成：class要写在spring里面配置的名字：employeeAction
+				Spring中的配置：<bean id="employeeAction" class="com.company.ssh.mvc.EmployeeAction">
+				前台：employee_list.action 在这里相当于：employeeAction_list.action，
+				如下使用通配符：
+		 -->
+		<action name="systemMenu_*" class="systemMenuAction" method="{1}">
+        	<result type="redirectAction">
+        		<param name="actionName">systemMenu</param>
+        		<param name="queryObject.parentId">${systemMenu.parent.id}</param>
+        	</result> 
+        	<result name="list">/WEB-INF/views/systemMenu/list.jsp</result>
+        	<result name="input">/WEB-INF/views/systemMenu/input.jsp</result>
+        </action>
+        <action name="*_*" class="{1}Action" method="{2}">
+        	<!-- 
+        		重定向到Action：
+        			前台success，相当于访问employeeAction的execute方法
+        	 -->
+        	<result type="redirectAction">
+        		<param name="actionName">{1}</param>
+        	</result> 
+        	<result name="list">/WEB-INF/views/{1}/list.jsp</result>
+        	<result name="input">/WEB-INF/views/{1}/input.jsp</result>
+        	<result name="{2}">/WEB-INF/views/{1}/{2}.jsp</result>
+        </action>
+        
+        <action name="login" class="com.company.pss.mvc.LoginAction">
+        	<interceptor-ref name="paramsPrepareParamsStack"/>
+        	<result type="redirectAction">
+        		<param name="actionName">main</param>
+        	</result>
+        </action>
+        
+        <action name="main" class="com.company.pss.mvc.MainAction">
+        	<result>/WEB-INF/views/main.jsp</result>
+        </action>
+    </package>
+</struts>
