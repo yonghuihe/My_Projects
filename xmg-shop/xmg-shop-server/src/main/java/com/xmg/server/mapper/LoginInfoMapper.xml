@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.server.mapper.LoginInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.api.domain.LoginInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from `login_info`
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xmg.api.domain.LoginInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into `login_info` (user_name, password, state, 
+      user_type)
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}, 
+      #{userType,jdbcType=TINYINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xmg.api.domain.LoginInfo" >
+    update `login_info`
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      state = #{state,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, user_name, password, state, user_type
+    from `login_info`
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectLoginInfo" resultMap="BaseResultMap">
+  	select id, user_name, password, state, user_type
+    from `login_info`
+    where user_name = #{userName} and password = #{password}
+  </select>
+  
+</mapper>

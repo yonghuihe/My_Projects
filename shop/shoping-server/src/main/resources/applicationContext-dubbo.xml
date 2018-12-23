@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+		
+	<!-- 提供方应用名称信息，这个相当于起一个名字，我们dubbo管理页面比较清晰是哪个应用暴露出来的 -->
+	<dubbo:application name="${dubbo.application.name}" />
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- 
+		说明：
+   		  dubbo:registry 标签一些属性的说明：
+	      1）register是否向此注册中心注册服务，如果设为false的话就不注册，读取本地服务配置，
+	      	如果为true的话，就向注册中心注册服务。
+	      2）check注册中心不存在时，是否报错。
+	      3）subscribe是否向此注册中心订阅服务，如果设为false，将只注册，不订阅。
+	      4）timeout注册中心请求超时时间(毫秒)。
+	      5）address可以Zookeeper集群配置，地址可以多个以逗号隔开等。
+	 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" register="false"  />
+	<!-- <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/> -->
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	
+	<!-- 服务提供者统一配置:超时(timeout),延迟暴露(等待Spring初始化后暴露) -->
+	<dubbo:provider timeout="2000000" delay="-1" />
+    <!-- 要暴露的服务接口 -->  
+	<import resource="classpath:dubbo-provider.xml" />
+</beans>

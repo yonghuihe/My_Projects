@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.com.base.mapper.ProductImageMapper">
+    <resultMap id="BaseResultMap" type="com._520it.com.base.domain.ProductImage">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="image_path" property="imagePath" jdbcType="VARCHAR"/>
+        <result column="sequence" property="sequence" jdbcType="INTEGER"/>
+        <result column="mods" property="mods" jdbcType="BIGINT"/>
+        <result column="cover" property="cover" jdbcType="TINYINT"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" >
+    delete from product_image
+    where id = #{id}
+  </delete>
+    <insert id="insert"  useGeneratedKeys="true"
+            keyProperty="id">
+    insert into product_image (product_id, image_path, sequence, 
+      mods, cover)
+    values (#{productId,jdbcType=BIGINT}, #{imagePath,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, 
+      #{mods,jdbcType=BIGINT}, #{cover,jdbcType=TINYINT})
+  </insert>
+    <update id="updateByPrimaryKey" >
+    update product_image
+    set product_id = #{productId,jdbcType=BIGINT},
+      image_path = #{imagePath,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      mods = #{mods,jdbcType=BIGINT},
+      cover = #{cover,jdbcType=TINYINT}
+    where id = #{id}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select id, product_id, image_path, sequence, mods, cover
+    from product_image
+    where id = #{id}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, product_id, image_path, sequence, mods, cover
+    from product_image
+  </select>
+    <select id="getImageByProductId" resultMap="BaseResultMap">
+      select id, product_id, image_path, sequence, mods, cover
+    from product_image WHERE product_id = #{productId}
+    </select>
+</mapper>

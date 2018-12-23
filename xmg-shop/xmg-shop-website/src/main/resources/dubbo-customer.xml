@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:reference interface="com.xmg.api.service.IBrandService" id="brandService"/>
+	<dubbo:reference interface="com.xmg.api.service.ICatalogPropertyService" id="catalogPropertyService"/>
+	<dubbo:reference interface="com.xmg.api.service.ICatalogService" id="catalogService"/>
+	<dubbo:reference interface="com.xmg.api.service.ILoginInfoService" id="loginInfoService"/>
+	<dubbo:reference interface="com.xmg.api.service.IProductImageService" id="productImageService"/>
+	<dubbo:reference interface="com.xmg.api.service.IProductService" id="productService"/>
+	<dubbo:reference interface="com.xmg.api.service.IProductSkuService" id="productSkuService"/>
+	<dubbo:reference interface="com.xmg.api.service.ISkuPropertyService" id="skuPropertyService"/>
+	<dubbo:reference interface="com.xmg.api.service.ISkuService" id="skuService"/>
+	<dubbo:reference interface="com.xmg.api.service.IProductDescService" id="productDescService"/>
+	<dubbo:reference interface="com.xmg.api.service.IProductCatalogPropertyValueService" id="productCatalogPropertyValueService"/>
+	
+</beans>
+
+
+
+
+

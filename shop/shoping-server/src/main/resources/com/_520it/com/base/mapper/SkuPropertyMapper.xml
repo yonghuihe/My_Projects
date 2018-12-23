@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com._520it.com.base.mapper.SkuPropertyMapper" >
+  <resultMap id="BaseResultMap" type="com._520it.com.base.domain.SkuProperty" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="catalog_id" property="catalogId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey"  >
+    delete from sku_property
+    where id = #{id}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+    insert into sku_property (name, catalog_id, type, 
+      sequence)
+    values (#{name,jdbcType=VARCHAR}, #{catalogId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, 
+      #{sequence})
+  </insert>
+  <update id="updateByPrimaryKey" >
+    update sku_property
+    set name = #{name,jdbcType=VARCHAR},
+      catalog_id = #{catalogId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      sequence = #{sequence,jdbcType=INTEGER}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select id, name, catalog_id, type, sequence
+    from sku_property
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, catalog_id, type, sequence
+    from sku_property
+  </select>
+</mapper>

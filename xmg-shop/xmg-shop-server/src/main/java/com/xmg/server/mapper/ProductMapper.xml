@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.server.mapper.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.api.domain.Product" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="last_modified_date" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="base_price" property="basePrice" jdbcType="DECIMAL" />
+    <result column="mods" property="mods" jdbcType="BIGINT" />
+    <result column="impressions" property="impressions" jdbcType="VARCHAR" />
+    
+    <!-- <association property="catalog" column="catalog_id" 
+    javaType="com.xmg.api.domain.Catalog"
+    select="com.xmg.code.mapper.CatalogMapper.selectByPrimaryKey"/>
+     <association property="brand" column="brand_id" 
+    javaType="com.xmg.api.domain.Brand"
+    select="com.xmg.code.mapper.BrandMapper.selectByPrimaryKey"/>
+     -->
+    <association property="catalog" column="catalog_id" 
+    javaType="com.xmg.api.domain.Catalog">
+    	<id property="id" column="c_id"/>
+    	<result property="name" column="c_name"/>
+    </association>
+    <association property="brand" column="brand_id" 
+    javaType="com.xmg.api.domain.Brand">
+    	<id property="id" column="b_id"/>
+    	<result property="chineseName" column="b_chinese_name"/>
+    </association>
+    
+   
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xmg.api.domain.Product" useGeneratedKeys="true" keyProperty="id" >
+    insert into product (created_date, last_modified_date, 
+      version, catalog_id, brand_id, 
+      name, keyword, code, 
+      image, market_price, base_price, 
+      mods,impressions)
+    values (#{createdDate,jdbcType=TIMESTAMP}, #{lastModifiedDate,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER}, #{catalog.id,jdbcType=BIGINT}, #{brand.id,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{image,jdbcType=VARCHAR}, #{marketPrice,jdbcType=DECIMAL}, #{basePrice,jdbcType=DECIMAL}, 
+      #{mods,jdbcType=BIGINT},#{impressions})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xmg.api.domain.Product" >
+    update product
+    set created_date = #{createdDate,jdbcType=TIMESTAMP},
+      last_modified_date = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=INTEGER},
+      catalog_id = #{catalog.id,jdbcType=BIGINT},
+      brand_id = #{brand.id,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      base_price = #{basePrice,jdbcType=DECIMAL},
+      mods = #{mods,jdbcType=BIGINT},
+      impressions = #{impressions}
+    where id = #{id}
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    <include refid="BaseSelect"></include>
+    where p.id = #{id}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    <include refid="BaseSelect"></include>
+  </select>
+  
+  <select id="queryCount" resultType="int">
+    select count(id) from product
+  </select>
+  
+  <select id="query" resultMap="BaseResultMap">
+    <include refid="BaseSelect"></include>
+    order by p.id desc limit #{start},#{pageSize}
+  </select>
+  
+  <sql id="BaseSelect">
+  	select p.id, p.created_date, p.last_modified_date, p.version, p.catalog_id, p.brand_id, p.name, 
+    p.keyword, p.code, p.image, p.market_price, p.base_price, p.mods,p.impressions,c.id as c_id,c.name as c_name,b.id as b_id,b.chinese_name as b_chinese_name
+    from product p left join catalog c on p.catalog_id = c.id left join brand b on p.brand_id = b.id
+  </sql>
+</mapper>
+
+
+
+
+
+

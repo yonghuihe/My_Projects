@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+<!-- 
+dubbo:service标签的一些属性说明：
+     1）interface服务接口的路径
+     2）ref引用对应的实现类的Bean的ID
+     3）registry向指定注册中心注册，在多个注册中心时使用，值为<dubbo:registry>的id属性，多个注册中心ID用逗号分隔，如果不想将该服务注册到任何registry，可将值设为N/A
+     4）register 默认true ，该协议的服务是否注册到注册中心。
+ -->
+	<dubbo:service interface="com.xmg.api.service.IBrandService" ref="brandService"/>
+	<dubbo:service interface="com.xmg.api.service.ICatalogPropertyService" ref="catalogPropertyService"/>
+	<dubbo:service interface="com.xmg.api.service.ICatalogService" ref="catalogService"/>
+	<dubbo:service interface="com.xmg.api.service.ILoginInfoService" ref="loginInfoService"/>
+	<dubbo:service interface="com.xmg.api.service.IProductImageService" ref="productImageService"/>
+	<dubbo:service interface="com.xmg.api.service.IProductService" ref="productService"/>
+	<dubbo:service interface="com.xmg.api.service.IProductSkuService" ref="productSkuService"/>
+	<dubbo:service interface="com.xmg.api.service.ISkuPropertyService" ref="skuPropertyService"/>
+	<dubbo:service interface="com.xmg.api.service.ISkuService" ref="skuService"/>
+	<dubbo:service interface="com.xmg.api.service.IProductDescService" ref="productDescService"/>
+	<dubbo:service interface="com.xmg.api.service.IProductCatalogPropertyValueService" ref="productCatalogPropertyValueService"/>
+	
+
+</beans>
+
+
+
