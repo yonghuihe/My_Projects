@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!--开发者模式：配置文件改变，不需要重启(default.peroperties中默认为：false) -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 禁用浏览器缓存：default.peroperties中默认为true， 在开发阶段我们希望每次请求都获得服务器的最新新响应，则可以设置为：false -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+
+	<include file="com/conpany/domain/product-struts.xml"/>
+	<!-- <include file="com/conpany/domain/productDir-struts.xml"/> -->
+
+</struts>
