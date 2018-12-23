@@ -1,0 +1,23 @@
+[{
+	"id":1,
+	"text":"系统管理",
+	"children":[{
+		"id":11,
+		"text":"员工管理",
+		"attributes":{
+			"url":"/employee"
+		 }
+		},{
+		"id":12,
+		"text":"部门管理",
+		"attributes":{
+			"url":"/project/dept.html"
+		 }
+		},{
+		"id":13,
+		"text":"角色管理",
+		"attributes":{
+			"url":"/role"
+		}
+	}]
+}]

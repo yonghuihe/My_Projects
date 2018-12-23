@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="Menu" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="attributes" property="attributes" jdbcType="VARCHAR" />
+	<association property="permission" javaType="Permission" columnPrefix="p_">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="resource" column="resource" />
+	</association>    
+	
+    <collection property="children" ofType="Menu" 
+       column="id" select="com.company.crm.mapper.MenuMapper.getChildrenMenu">
+    </collection>
+	
+  </resultMap>
+  
+  <select id="getRootMenu" resultMap="BaseResultMap">
+  	 select * from menu where parent_id is null
+  </select>
+  
+  <select id="getChildrenMenu" resultMap="BaseResultMap">
+  	SELECT
+	m.id,
+	m.text,
+	m.state,
+	m.attributes,
+	p.id AS p_id,
+	  p.resource AS p_resource,
+	  p.`name` AS p_name
+	FROM
+		menu m
+	LEFT JOIN permission p ON m.permission_id = p.id
+	WHERE
+		m.parent_id = #{pid}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Menu" useGeneratedKeys="true" keyProperty="id" >
+    insert into menu (text, state, attributes, 
+      parent_id)
+    values (#{text,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{attributes,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Menu" >
+    update menu
+    set text = #{text,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      attributes = #{attributes,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, text, state, attributes, parent_id
+    from menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, text, state, attributes, parent_id
+    from menu
+  </select>
+</mapper>

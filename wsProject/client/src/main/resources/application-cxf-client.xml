@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<!-- 
+		远程处理类创建工厂
+		serviceClass:远程接口
+		address:远程调用地址
+	 -->
+	<bean id="WeatherFactoryBean" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass" value="cn.com.webxml.weather.WeatherWSSoap"/>
+		<property name="address" value="http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl"></property>
+	</bean>
+	<!-- 服务类可以直接通过@Autowried注入 -->
+	<bean id="weatherService" 
+		class="cn.com.webxml.weather.WeatherWSSoap" 
+		factory-bean="WeatherFactoryBean" 
+		factory-method="create">
+	</bean>
+	
+	<!-- 单点登录 -->
+	<bean id="SSOFactoryBean" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass" value="com.company.crm.ws.sso.ISSOService"/>
+		<property name="address" value="http://www.server.com/ws/SSOService?wsdl"></property>
+	</bean>
+	<!-- 服务类可以直接通过@Autowried注入 -->
+	<bean id="ssoService" 
+		class="com.company.crm.ws.sso.ISSOService" 
+		factory-bean="SSOFactoryBean" 
+		factory-method="create">
+	</bean>
+</beans>

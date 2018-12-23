@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.EmployeeMapper">
+
+	<select id="selectByPrimaryKey" resultType="Employee"
+		parameterType="java.lang.Long">
+		select id, username, realname, password, tel, email,
+		dept_id, inputtime,
+		state, admin
+		from employee
+		where id =
+		#{id,jdbcType=BIGINT}
+	</select>
+
+	<!-- 登录 -->
+	<select id="getEmployeeForlogin" resultType="Employee">
+		select * from
+		employee where username = #{username} and password =
+		${password}
+	</select>
+	
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.crm.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="Role" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id" >
+    insert into role (sn, name)
+    values (#{sn,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Role" >
+    update role
+    set sn = #{sn,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, sn, name
+    from role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, sn, name
+    from role
+  </select>
+  
+  <sql id="where_sql">
+  </sql>
+  
+  <!-- 查询符合条件的记录数 -->
+  <select id="queryPageResultCount" resultType="long">
+  	  select count(r.id) from role r
+  	  <include refid="where_sql" />
+  </select>
+  
+  <!-- 查询符合条件的结果集 -->
+  <select id="queryPageResult" resultMap="BaseResultMap">
+  	  select * from role 
+  	  <include refid="where_sql" />
+  	  <if test="start != null">
+  		 limit #{start},#{rows} 
+  	  </if>
+  </select>
+  
+  <!-- 关联关系,插入到中间表 -->
+  <insert id="insertRelation">
+  	insert into role_permission (r_id,p_id) values (#{rId},#{pId})
+  </insert>
+  
+   <!-- 打破关系 -->
+  <delete id="deleteRelation">
+ 	 delete from role_permission where r_id = #{id}
+  </delete>
+  
+  
+</mapper>
